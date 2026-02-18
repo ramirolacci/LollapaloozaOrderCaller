@@ -28,5 +28,27 @@ export function useLocalStorage() {
     }
   }, [state]);
 
+  // Sincronizar cambios de localStorage entre distintas pestañas/ventanas
+  useEffect(() => {
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== STORAGE_KEY || !event.newValue) return;
+
+      try {
+        const newState = JSON.parse(event.newValue) as AppState;
+
+        // Evitar renders innecesarios si el estado ya es el mismo
+        setState((prev) => {
+          const prevSerialized = JSON.stringify(prev);
+          return prevSerialized === event.newValue ? prev : newState;
+        });
+      } catch (error) {
+        console.error('Error parsing state from storage event:', error);
+      }
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
   return [state, setState] as const;
 }

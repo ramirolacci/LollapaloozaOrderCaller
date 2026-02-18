@@ -1,5 +1,4 @@
 import { AppState } from '../types';
-import { Pizza } from 'lucide-react';
 
 interface Props {
   state: AppState;
@@ -9,11 +8,12 @@ export function LlamadorView({ state }: Props) {
   return (
     <div className="h-screen bg-gray-900 flex flex-col overflow-hidden">
       <div className="bg-yellow-400 py-8 px-6 shadow-2xl">
-        <div className="flex items-center justify-center gap-4">
-          <Pizza size={64} className="text-gray-900" strokeWidth={2.5} />
-          <h1 className="text-6xl font-black text-gray-900 tracking-tight">
-            MI GUSTO
-          </h1>
+        <div className="flex items-center justify-center">
+          <img 
+            src="/Logo Mi Gusto 2025.png" 
+            alt="Mi Gusto" 
+            className="h-24 w-auto object-contain"
+          />
         </div>
       </div>
 

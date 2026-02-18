@@ -8,8 +8,20 @@ import { Pedido } from './types';
 type Vista = 'contador' | 'llamador';
 
 function App() {
-  const [state, setState] = useLocalStorage();
-  const [vista, setVista] = useState<Vista>('contador');
+  const [state, setState] = useLocalStorage(); 
+  const [vista, setVista] = useState<Vista>(() => {
+    try {
+      const path = window.location.pathname.toLowerCase();
+      if (path.includes('llamador')) return 'llamador';
+      if (path.includes('contador')) return 'contador';
+
+      const params = new URLSearchParams(window.location.search);
+      const urlVista = params.get('vista');
+      return urlVista === 'llamador' ? 'llamador' : 'contador';
+    } catch {
+      return 'contador';
+    }
+  });
 
   const handleIncrement = () => {
     setState((prev) => ({
@@ -96,13 +108,12 @@ function App() {
         )}
       </div>
 
-      {vista === 'llamador' && (
+      {vista === 'llamador' && !window.location.pathname.toLowerCase().includes('llamador.html') && (
         <button
           onClick={() => setVista('contador')}
-          className="fixed bottom-6 right-6 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-6 py-3 rounded-full shadow-2xl transition-all active:scale-95 z-50 flex items-center gap-2"
+          className="fixed bottom-4 right-4 bg-gray-800/70 hover:bg-gray-700 text-yellow-300 p-3 rounded-full shadow-lg transition-all active:scale-95 z-50 flex items-center justify-center"
         >
-          <Calculator size={24} />
-          Volver al Contador
+          <Monitor size={18} />
         </button>
       )}
     </div>
